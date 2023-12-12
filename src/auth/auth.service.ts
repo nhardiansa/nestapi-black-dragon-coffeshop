@@ -1,5 +1,5 @@
 import { Injectable, Post } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
+import { LoginDto, LoginResponseDto, RegisterDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -10,5 +10,12 @@ export class AuthService {
   }
 
   @Post('login')
-  async login() {}
+  async login(userData: LoginDto): Promise<LoginResponseDto> {
+    console.log(userData);
+    // expected returning access and refresh token
+    return {
+      accessToken: 'random-access-token',
+      refreshToken: 'random-refresh-token',
+    };
+  }
 }
