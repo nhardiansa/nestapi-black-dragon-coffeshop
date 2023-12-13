@@ -1,9 +1,14 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, LoginResponseDto, RegisterDto } from './dto/auth.dto';
+import {
+  LoginDto,
+  LoginResponseDto,
+  RegisterDto,
+  VerifyResetPasswordDto,
+} from './dto/auth.dto';
 import { Response } from 'express';
 import { ResponseDto, SimpleResponseDto } from 'src/dtos/response.dtos';
-import { API_PREFIX } from 'src/helper/constants';
+import { API_PREFIX } from 'src/helpers/constants';
 
 @Controller(`${API_PREFIX}/auth`)
 export class AuthController {
@@ -48,6 +53,30 @@ export class AuthController {
         message: error.message,
       };
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(response);
+    }
+  }
+
+  @Post('verify-reset-password')
+  async verifyResetPassword(
+    @Body() data: VerifyResetPasswordDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      console.log(data);
+      const result = await this.authService.verifyResetPassword(data);
+      const response: SimpleResponseDto = {
+        success: true,
+        message: result,
+      };
+
+      res.status(HttpStatus.OK).json(response);
+    } catch (error) {
+      const response: ResponseDto<VerifyResetPasswordDto> = {
+        success: false,
+        message: error.message,
+        errors: error.errors,
+      };
+      res.status(error.code || HttpStatus.INTERNAL_SERVER_ERROR).json(response);
     }
   }
 }

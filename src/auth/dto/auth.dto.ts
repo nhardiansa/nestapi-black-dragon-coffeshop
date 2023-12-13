@@ -31,3 +31,19 @@ export class LoginResponseDto {
   accessToken: string;
   refreshToken: string;
 }
+
+export class VerifyResetPasswordDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  password: string;
+
+  @IsString()
+  @MinLength(8)
+  confirmPassword: string;
+
+  @IsString()
+  code: string;
+}
